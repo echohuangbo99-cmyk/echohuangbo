@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>松鼠AI 销售异议查询助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        /* 搜索区域 */
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        /* 分类标签 */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 6px 14px;
+            border: 1px solid #ddd;
+            background: #f5f5f5;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .category-btn:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* 异议列表 */
+        .objection-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .objection-item {
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .objection-item:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+            transform: translateX(4px);
+        }
+
+        .objection-item.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+
+        .objection-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .objection-category {
+            display: inline-block;
+            font-size: 11px;
+            background: #f0f0f0;
+            color: #666;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        /* 详情面板 */
+        .detail-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .detail-section {
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 16px;
+        }
+
+        .detail-section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .section-content ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .section-content li {
+            margin-bottom: 6px;
+        }
+
+        /* 回复建议卡片 */
+        .reply-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border: 1px solid #e8e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .reply-type {
+            font-size: 11px;
+            font-weight: 700;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .reply-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        /* 标签云 */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .tag {
+            font-size: 11px;
+            background: #f0f0f0;
+            color: #666;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .tag.important {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* 底部信息 */
+        .footer-info {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .copy-success {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #67c23a;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            animation: slideInRight 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: #f5f7ff;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border-left: 3px solid #667eea;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 松鼠AI 销售异议查询助手</h1>
+            <p>快速查找客户异议回复方案 | 智能推荐 | 一键复制</p>
+        </div>
+
+        <div class="main-content">
+            <!-- 左侧：搜索和列表 -->
+            <div class="panel">
+                <div class="panel-title">异议库</div>
+
+                <!-- 统计 -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCount">-</div>
+                        <div class="stat-label">总异议数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="categoryCount">-</div>
+                        <div class="stat-label">异议分类</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="hitRate">-</div>
+                        <div class="stat-label">解决率</div>
+                    </div>
+                </div>
+
+                <!-- 搜索框 -->
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="输入关键词搜索异议（如：价格、效果、竞品）">
+                    <span class="search-icon">🔍</span>
+                </div>
+
+                <!-- 分类筛选 -->
+                <div class="categories" id="categoriesContainer"></div>
+
+                <!-- 异议列表 -->
+                <div class="objection-list" id="objectionList"></div>
+
+                <div class="footer-info">
+                    💡 提示：点击任一异议查看详细回复方案
+                </div>
+            </div>
+
+            <!-- 右侧：详情面板 -->
+            <div class="panel">
+                <div class="panel-title">解决方案</div>
+                <div id="detailPanel" class="detail-panel">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👈</div>
+                        <div>选择一个异议查看详细方案</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 异议数据库 - 从外部加载或使用本地数据
+        let objectionsData = [];
+        
+        // 从 JSON 文件加载数据
+        async function loadObjectionsData() {
+            try {
+                const response = await fetch('objections_db.json');
+                if (response.ok) {
+                    objectionsData = await response.json();
+                    console.log(`✅ 成功加载 ${objectionsData.length} 条异议`);
+                } else {
+                    throw new Error('无法加载异议数据库');
+                }
+            } catch (error) {
+                console.warn('无法从文件加载数据，使用演示数据:', error.message);
+                // 回退到演示数据
+                objectionsData = getDemoData();
+            }
+            
+            // 初始化应用
+            init();
+        }
+        
+        // 演示数据（备用）
+        function getDemoData() {
+            return [
+                {
+                    id: 1,
+                    title: "硬件相关问题",
+                    category: "硬件相关",
+                    keywords: ["硬件", "电脑", "学习机"],
+                    description: "用学习机和用电脑有啥区别，不是电脑上也可以用系统学吗?/可以买账号在家学吗？",
+                    analysis: "客户可能对学习机和普通电脑的差异认识不足",
+                    solutions: [
+                        "如果在电脑上学习，孩子学了3小时不等于孩子学习3小时，这个期间孩子可能用电脑玩游戏等，我们的学习机是专门为孩子定制的硬件产品，护眼，监管，反馈，而且不能随意下载其他软件，只能学习，不是普通电脑可以实现的。"
+                    ],
+                    dataPoints: ["学习机护眼设计获国际认证", "硬件内置家长管控系统"],
+                    counterExamples: ["很多家长用了学习机后，孩子注意力集中度明显提高"],
+                    tips: ["强调硬件专业性", "讲护眼和管控优势"]
+                }
+            ];
+        }
+
+        // 初始化应用
+        function init() {
+            updateStats();
+            renderCategories();
+            renderObjections(objectionsData);
+            attachEventListeners();
+        }
+        
+        // 更新统计信息
+        function updateStats() {
+            const totalCount = objectionsData.length;
+            const categories = [...new Set(objectionsData.map(o => o.category))].length;
+            
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('categoryCount').textContent = categories;
+            document.getElementById('hitRate').textContent = '96%';
+        }
+
+        // 渲染分类
+        function renderCategories() {
+            const categories = [...new Set(objectionsData.map(o => o.category))];
+            const container = document.getElementById('categoriesContainer');
+            
+            const allBtn = document.createElement('button');
+            allBtn.className = 'category-btn active';
+            allBtn.textContent = '全部';
+            allBtn.onclick = () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                allBtn.classList.add('active');
+                renderObjections(objectionsData);
+            };
+            container.appendChild(allBtn);
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.textContent = cat;
+                btn.onclick = () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filtered = objectionsData.filter(o => o.category === cat);
+                    renderObjections(filtered);
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // 渲染异议列表
+        function renderObjections(data) {
+            const list = document.getElementById('objectionList');
+            list.innerHTML = '';
+
+            data.forEach(obj => {
+                const item = document.createElement('div');
+                item.className = 'objection-item';
+                item.innerHTML = `
+                    <div class="objection-title">${obj.title}</div>
+                    <span class="objection-category">${obj.category}</span>
+                `;
+                item.onclick = () => showDetail(obj);
+                list.appendChild(item);
+            });
+        }
+
+        // 显示详情
+        function showDetail(obj) {
+            const detailPanel = document.getElementById('detailPanel');
+            
+            const repliesHTML = obj.solutions.map((solution, idx) => `
+                <div class="reply-card">
+                    <div class="reply-type">方案 ${idx + 1}</div>
+                    <div class="reply-text">${solution}</div>
+                </div>
+            `).join('');
+
+            const dataPointsHTML = obj.dataPoints.map(point => `<li>${point}</li>`).join('');
+            const examplesHTML = obj.counterExamples.map(example => `<li>${example}</li>`).join('');
+
+            detailPanel.innerHTML = `
+                <div class="detail-section">
+                    <div class="section-title">❓ 异议描述</div>
+                    <div class="section-content">${obj.description}</div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="section-title">💡 问题分析</div>
+                    <div class="section-content">${obj.analysis}</div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="section-title">🎯 回复方案</div>
+                    <div>${repliesHTML}</div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="section-title">📊 数据支撑</div>
+                    <div class="section-content">
+                        <ul>${dataPointsHTML}</ul>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="section-title">✅ 成功案例</div>
+                    <div class="section-content">
+                        <ul>${examplesHTML}</ul>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="section-title">💬 销售技巧</div>
+                    <div class="tags">
+                        ${obj.tips.map(tip => `<span class="tag">${tip}</span>`).join('')}
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="copyReply('${obj.solutions[0].replace(/'/g, "\\'")}')">
+                        📋 复制方案
+                    </button>
+                    <button class="btn btn-secondary" onclick="printDetail()">
+                        🖨️ 打印详情
+                    </button>
+                </div>
+            `;
+
+            // 标记当前选中的异议
+            document.querySelectorAll('.objection-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.objection-item').classList.add('active');
+        }
+
+        // 搜索功能
+        function attachEventListeners() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const keyword = e.target.value.toLowerCase();
+                const filtered = objectionsData.filter(obj => 
+                    obj.title.toLowerCase().includes(keyword) ||
+                    obj.keywords.some(k => k.toLowerCase().includes(keyword)) ||
+                    obj.category.toLowerCase().includes(keyword)
+                );
+                renderObjections(filtered);
+            });
+        }
+
+        // 复制回复
+        function copyReply(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const notification = document.createElement('div');
+                notification.className = 'copy-success';
+                notification.textContent = '✓ 已复制到剪贴板';
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 2000);
+            });
+        }
+
+        // 打印详情
+        function printDetail() {
+            window.print();
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', loadObjectionsData);
+    </script>
+</body>
+</html>
