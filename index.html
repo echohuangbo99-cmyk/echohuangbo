@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="松鼠AI销售异议查询助手 - 智能异议处理知识库">
-    <meta name="keywords" content="异议处理,销售技巧,话术库,松鼠AI">
-    <meta property="og:title" content="松鼠AI 异议查询助手">
-    <meta property="og:description" content="销售团队的秘密武器 - 智能异议处理知识库">
-    <title>🐿️ 松鼠AI 异议查询助手 - 在线版</title>
+    <meta name="description" content="松鼠AI销售知识库 - 异议应对与邀约转化双模块知识库">
+    <meta name="keywords" content="异议处理,销售技巧,邀约话术,松鼠AI,知识库">
+    <meta property="og:title" content="🐿️ 松鼠AI 销售知识库">
+    <meta property="og:description" content="异议应对 + 邀约转化双模块实战知识库">
+    <title>🐿️ 松鼠AI 销售知识库 - 在线版</title>
     <style>
         * {
             margin: 0;
@@ -20,11 +20,13 @@
             --primary-light: #FFE5E5;
             --primary-dark: #E63946;
             --secondary: #4D96FF;
+            --secondary-light: #E8F1FF;
             --success: #51CF66;
             --warning: #FFD43B;
             --dark: #2C3E50;
             --light: #F8F9FA;
             --border: #E0E0E0;
+            --muted: #6B7280;
         }
 
         body {
@@ -35,7 +37,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -43,7 +45,7 @@
         header {
             text-align: center;
             color: white;
-            margin-bottom: 40px;
+            margin-bottom: 24px;
             padding-top: 20px;
         }
 
@@ -54,54 +56,75 @@
         }
 
         header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 1.05em;
+            opacity: 0.92;
+        }
+
+        .module-switch {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 0 auto 24px;
+            flex-wrap: wrap;
+        }
+
+        .module-btn {
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.14);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.98em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(6px);
+        }
+
+        .module-btn:hover,
+        .module-btn.active {
+            background: white;
+            color: var(--primary-dark);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .module-tip {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 28px;
+            font-size: 0.95em;
         }
 
         .main {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 340px 1fr;
             gap: 20px;
             margin-bottom: 40px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .main {
                 grid-template-columns: 1fr;
             }
 
             header h1 {
-                font-size: 1.8em;
+                font-size: 1.85em;
             }
         }
 
-        .sidebar {
+        .sidebar,
+        .content {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+        }
+
+        .sidebar {
             height: fit-content;
             position: sticky;
             top: 20px;
-        }
-
-        .search-box {
-            margin-bottom: 24px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 1em;
-            transition: all 0.3s;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-light);
         }
 
         .stats {
@@ -114,24 +137,50 @@
         .stat-card {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 16px;
-            border-radius: 8px;
+            padding: 16px 10px;
+            border-radius: 12px;
             text-align: center;
         }
 
         .stat-number {
-            font-size: 1.8em;
-            font-weight: bold;
+            font-size: 1.55em;
+            font-weight: 700;
             margin-bottom: 4px;
         }
 
         .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
+            font-size: 0.85em;
+            opacity: 0.92;
+        }
+
+        .search-box {
+            margin-bottom: 10px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.98em;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .search-tip {
+            color: var(--muted);
+            font-size: 0.85em;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
         .categories {
-            max-height: 400px;
+            max-height: 480px;
             overflow-y: auto;
         }
 
@@ -139,15 +188,15 @@
             padding: 12px 16px;
             margin-bottom: 8px;
             background: var(--light);
-            border-radius: 6px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
+            transition: all 0.25s ease;
+            border-left: 4px solid transparent;
             font-weight: 500;
         }
 
         .category-item:hover {
-            background: #E8F5FF;
+            background: var(--secondary-light);
             border-left-color: var(--secondary);
         }
 
@@ -157,11 +206,15 @@
             color: var(--primary-dark);
         }
 
-        .content {
-            background: white;
+        .module-summary {
+            margin-bottom: 22px;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #fff7ed 0%, #fff1f2 100%);
+            border: 1px solid #fed7d7;
             border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            color: #7c2d12;
+            line-height: 1.6;
+            font-size: 0.94em;
         }
 
         .objection-list {
@@ -169,68 +222,85 @@
             gap: 16px;
         }
 
-        .objection-card {
+        .knowledge-card {
             padding: 20px;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            transition: all 0.3s;
+            border-radius: 14px;
+            transition: all 0.3s ease;
             cursor: pointer;
+            background: white;
         }
 
-        .objection-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .knowledge-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             transform: translateY(-2px);
         }
 
-        .objection-card.expanded {
+        .knowledge-card.expanded {
             border-color: var(--primary);
-            background: var(--primary-light);
+            background: #fffdfd;
         }
 
-        .objection-header {
+        .knowledge-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+            align-items: flex-start;
+            gap: 12px;
         }
 
-        .objection-id {
+        .knowledge-id {
             background: var(--primary);
             color: white;
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 700;
             flex-shrink: 0;
         }
 
-        .objection-title {
+        .knowledge-main {
             flex: 1;
-            margin: 0 16px;
-            font-size: 1.1em;
+            min-width: 0;
+        }
+
+        .knowledge-title {
+            font-size: 1.08em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .knowledge-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            background: var(--secondary-light);
+            color: var(--secondary);
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.82em;
             font-weight: 600;
         }
 
-        .objection-category {
-            background: var(--secondary);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.85em;
+        .chip.primary {
+            background: var(--primary-light);
+            color: var(--primary-dark);
         }
 
-        .objection-content {
+        .knowledge-content {
             display: none;
         }
 
-        .objection-card.expanded .objection-content {
+        .knowledge-card.expanded .knowledge-content {
             display: block;
             margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .content-section {
@@ -238,90 +308,85 @@
         }
 
         .content-section-title {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary);
             margin-bottom: 8px;
             font-size: 0.95em;
         }
 
         .content-section-content {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 8px;
+            color: #4b5563;
+            line-height: 1.7;
+            white-space: pre-wrap;
         }
 
-        .solutions-list {
+        .list-box {
             list-style: none;
             padding-left: 0;
         }
 
-        .solutions-list li {
-            padding: 8px 0;
-            padding-left: 24px;
+        .list-box li {
+            padding: 8px 0 8px 24px;
             position: relative;
-            line-height: 1.6;
+            line-height: 1.7;
+            color: #4b5563;
         }
 
-        .solutions-list li:before {
+        .list-box li::before {
             content: "→";
             position: absolute;
             left: 0;
             color: var(--primary);
-            font-weight: bold;
+            font-weight: 700;
         }
 
-        .data-points, .tips {
-            background: #F5F5F5;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.95em;
+        .tips-box {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 12px 14px;
         }
 
-        .data-points > div, .tips > div {
+        .tips-box > div {
             padding: 6px 0;
+            color: #4b5563;
+            line-height: 1.65;
         }
 
         .copy-btn {
             background: var(--success);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 16px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 0.92em;
             margin-top: 12px;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
         }
 
         .copy-btn:hover {
             background: #40C057;
-            transform: scale(1.05);
         }
 
         .copy-btn.copied {
-            background: #90EE90;
+            background: #2f9e44;
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px;
-            color: #999;
+            padding: 56px 16px;
+            color: #94a3b8;
         }
 
         footer {
             text-align: center;
             color: white;
             padding: 20px;
-            opacity: 0.8;
+            opacity: 0.86;
         }
 
         .categories::-webkit-scrollbar {
             width: 6px;
-        }
-
-        .categories::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
         }
 
         .categories::-webkit-scrollbar-thumb {
@@ -333,289 +398,427 @@
 <body>
     <div class="container">
         <header>
-            <h1>🐿️ 松鼠AI 异议查询助手</h1>
-            <p>销售团队的秘密武器 - 智能异议处理知识库</p>
+            <h1>🐿️ 松鼠AI 销售知识库</h1>
+            <p>异议应对 + 邀约转化双模块，门店销售一站式实战资料库</p>
         </header>
+
+        <div class="module-switch" id="moduleSwitch">
+            <button class="module-btn active" data-module="objections">📚 异议查询库</button>
+            <button class="module-btn" data-module="invitation">📞 邀约话术库</button>
+        </div>
+
+        <div class="module-tip" id="moduleTip">当前查看：异议处理、回复方案、案例与销售技巧</div>
 
         <div class="main">
             <aside class="sidebar">
-                <div class="stats" id="stats">
+                <div class="stats">
                     <div class="stat-card">
                         <div class="stat-number" id="totalCount">-</div>
-                        <div class="stat-label">总异议数</div>
+                        <div class="stat-label">知识条目</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="categoryCount">-</div>
                         <div class="stat-label">分类</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="hitRate">96%</div>
-                        <div class="stat-label">解决率</div>
+                        <div class="stat-number" id="metaCount">-</div>
+                        <div class="stat-label" id="metaLabel">话术段落</div>
                     </div>
                 </div>
 
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="🔍 搜索异议关键词...">
                 </div>
+                <div class="search-tip" id="searchTip">支持按标题、分类、关键词、客户描述快速检索。</div>
 
-                <div class="categories" id="categories">
-                    <div class="category-item" data-category="all">
-                        📋 全部异议
-                    </div>
-                </div>
+                <div class="categories" id="categories"></div>
             </aside>
 
             <div class="content">
-                <div class="objection-list" id="objectionList">
+                <div class="module-summary" id="moduleSummary">
+                    点击卡片可展开完整内容，复制按钮可直接带走实战话术。
+                </div>
+                <div class="objection-list" id="knowledgeList">
                     <div class="empty-state">
                         <h3>加载中...</h3>
-                        <p>正在获取异议数据库</p>
+                        <p>正在获取销售知识库</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <footer>
-            <p>© 2026 松鼠AI 销售异议查询助手 | 版本 2.0 | <span id="updateTime">-</span></p>
+            <p>© 2026 松鼠AI 销售知识库 | 版本 3.0 | <span id="updateTime">-</span></p>
         </footer>
     </div>
 
     <script>
-        // 嵌入的异议数据（从 objections_db.json 读取）
-        let allObjections = [];
-        let filteredObjections = [];
-        let selectedCategory = 'all';
-
-        // 初始化应用
-        async function init() {
-            try {
-                // 尝试从远程 API 加载
-                const response = await fetch('./objections_db.json');
-                if (response.ok) {
-                    allObjections = await response.json();
-                } else {
-                    throw new Error('本地数据加载失败');
-                }
-            } catch (error) {
-                // 本地开发回退机制
-                console.warn('使用演示数据:', error.message);
-                allObjections = getDemoData();
+        const DATASETS = {
+            objections: {
+                label: '异议查询库',
+                file: './objections_db.json',
+                emptyTitle: '没有找到相关异议',
+                emptyDesc: '试试换个关键词，或切换其他分类。',
+                searchPlaceholder: '🔍 搜索异议关键词...',
+                searchTip: '支持按标题、分类、关键词、客户描述快速检索。',
+                moduleTip: '当前查看：异议处理、回复方案、案例与销售技巧',
+                moduleSummary: '适合在接待、咨询、成交推进时快速查找客户异议及应对方案。',
+                metaLabel: '回复方案'
+            },
+            invitation: {
+                label: '邀约话术库',
+                file: './invitation_cases.json',
+                emptyTitle: '没有找到相关邀约话术',
+                emptyDesc: '试试搜索年级、场景、补课、升学、家长顾虑等词。',
+                searchPlaceholder: '🔍 搜索场景/年级/升学/补课...',
+                searchTip: '支持按场景、客户画像、痛点、跟进话术与微信模板检索。',
+                moduleTip: '当前查看：首电邀约、二次跟进、微信模板与高频应答',
+                moduleSummary: '新增补充资料库：围绕首电邀约、二次跟进、微信留资和到店确认，沉淀实战电话录音优化结果。',
+                metaLabel: '话术段落'
             }
+        };
 
-            initializeApp();
-        }
+        let database = {
+            objections: [],
+            invitation: []
+        };
+        let activeDatasetKey = 'objections';
+        let selectedCategory = 'all';
+        let filteredItems = [];
 
-        // 演示数据
-        function getDemoData() {
-            return [
-                {
-                    id: 1,
-                    title: "学习机 vs 电脑的区别",
-                    category: "硬件相关",
-                    keywords: ["硬件", "学习机", "电脑"],
-                    description: "客户问：为什么不能用电脑学习，一定要买学习机？",
-                    analysis: "这是对硬件差异认识不足的问题",
-                    solutions: [
-                        "如果在电脑上学习，孩子学了3小时不等于孩子学习3小时，期间可能玩游戏。我们的学习机是专门为孩子定制的硬件，护眼、监管、反馈齐全，不能随意下载其他软件，只能学习。"
-                    ],
-                    dataPoints: ["学习机护眼设计获国际认证", "硬件内置家长管控系统"],
-                    counterExamples: ["很多家长用了学习机后，孩子注意力集中度明显提高"],
-                    tips: ["强调硬件专业性", "讲护眼和管控优势"]
-                }
-            ];
-        }
-
-        // 初始化应用UI
-        function initializeApp() {
-            updateStats();
-            renderCategories();
-            filterAndRender();
+        async function init() {
+            await Promise.all([
+                loadDataset('objections', getObjectionFallback()),
+                loadDataset('invitation', [])
+            ]);
             attachEventListeners();
+            renderCurrentDataset();
             updateUpdateTime();
         }
 
-        // 更新统计信息
+        async function loadDataset(key, fallback) {
+            try {
+                const response = await fetch(DATASETS[key].file);
+                if (!response.ok) throw new Error('load failed');
+                database[key] = await response.json();
+            } catch (error) {
+                console.warn(`数据加载失败: ${key}`, error.message);
+                database[key] = fallback;
+            }
+        }
+
+        function getCurrentItems() {
+            return database[activeDatasetKey] || [];
+        }
+
+        function renderCurrentDataset() {
+            selectedCategory = 'all';
+            document.getElementById('searchInput').placeholder = DATASETS[activeDatasetKey].searchPlaceholder;
+            document.getElementById('searchTip').textContent = DATASETS[activeDatasetKey].searchTip;
+            document.getElementById('moduleTip').textContent = DATASETS[activeDatasetKey].moduleTip;
+            document.getElementById('moduleSummary').textContent = DATASETS[activeDatasetKey].moduleSummary;
+            document.getElementById('metaLabel').textContent = DATASETS[activeDatasetKey].metaLabel;
+            renderCategories();
+            updateStats();
+            filterAndRender();
+        }
+
         function updateStats() {
-            const totalCount = allObjections.length;
-            const categories = [...new Set(allObjections.map(o => o.category))].length;
+            const items = getCurrentItems();
+            const totalCount = items.length;
+            const categories = [...new Set(items.map(item => item.category))].length;
+            const metaCount = items.reduce((sum, item) => sum + getMetaCount(item), 0);
 
             document.getElementById('totalCount').textContent = totalCount;
             document.getElementById('categoryCount').textContent = categories;
+            document.getElementById('metaCount').textContent = metaCount;
         }
 
-        // 获取分类 emoji
+        function getMetaCount(item) {
+            if (activeDatasetKey === 'objections') {
+                return (item.solutions || []).length;
+            }
+            return (item.talkTrack || []).length + (item.followUp || []).length + (item.wechatTemplate || []).length + (item.faq || []).length;
+        }
+
         function getCategoryEmoji(category) {
             const emojiMap = {
                 '硬件相关': '🔧',
                 '系统相关': '💻',
                 '价格相关': '💰',
                 '时间相关': '⏰',
+                '时间问题': '⏰',
                 '效果相关': '🎯',
-                '回家商量': '🏠'
+                '效果的问题': '🎯',
+                '回家商量': '🏠',
+                '小学邀约': '🏫',
+                '培优邀约': '🌟',
+                '小升初规划': '🎓',
+                '初三升学': '📈',
+                '到店确认': '📍',
+                '单科检测': '🧠'
             };
             return emojiMap[category] || '📌';
         }
 
-        // 渲染分类
         function renderCategories() {
             const categoriesContainer = document.getElementById('categories');
-            const categories = [...new Set(allObjections.map(o => o.category))];
+            const items = getCurrentItems();
+            const categories = [...new Set(items.map(item => item.category))];
 
-            const html = `
-                <div class="category-item active" data-category="all">
-                    📋 全部异议 (${allObjections.length})
-                </div>
+            categoriesContainer.innerHTML = `
+                <div class="category-item active" data-category="all">📋 全部 (${items.length})</div>
                 ${categories.map(cat => {
-                    const count = allObjections.filter(o => o.category === cat).length;
-                    const emoji = getCategoryEmoji(cat);
-                    return `<div class="category-item" data-category="${cat}">${emoji} ${cat} (${count})</div>`;
+                    const count = items.filter(item => item.category === cat).length;
+                    return `<div class="category-item" data-category="${cat}">${getCategoryEmoji(cat)} ${cat} (${count})</div>`;
                 }).join('')}
             `;
-
-            categoriesContainer.innerHTML = html;
         }
 
-        // 过滤并渲染
         function filterAndRender() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const items = getCurrentItems();
 
-            filteredObjections = allObjections.filter(obj => {
-                const matchCategory = selectedCategory === 'all' || obj.category === selectedCategory;
-                const matchSearch = !searchTerm ||
-                    obj.description?.toLowerCase().includes(searchTerm) ||
-                    obj.title?.toLowerCase().includes(searchTerm) ||
-                    obj.keywords?.some(k => k.toLowerCase().includes(searchTerm));
-
+            filteredItems = items.filter(item => {
+                const matchCategory = selectedCategory === 'all' || item.category === selectedCategory;
+                const matchSearch = !searchTerm || collectSearchText(item).includes(searchTerm);
                 return matchCategory && matchSearch;
             });
 
-            renderObjections();
+            renderKnowledgeList();
         }
 
-        // 渲染异议
-        function renderObjections() {
-            const container = document.getElementById('objectionList');
+        function collectSearchText(item) {
+            const parts = [
+                item.title,
+                item.category,
+                item.stage,
+                item.target,
+                item.scene,
+                item.description,
+                item.analysis,
+                ...(item.keywords || []),
+                ...(item.solutions || []),
+                ...(item.dataPoints || []),
+                ...(item.counterExamples || []),
+                ...(item.tips || []),
+                ...(item.strengths || []),
+                ...(item.risks || []),
+                ...(item.talkTrack || []),
+                ...(item.followUp || []),
+                ...(item.wechatTemplate || []),
+                ...(item.faq || [])
+            ].filter(Boolean);
 
-            if (filteredObjections.length === 0) {
+            return parts.join(' ').toLowerCase();
+        }
+
+        function renderKnowledgeList() {
+            const container = document.getElementById('knowledgeList');
+
+            if (filteredItems.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <h3>没有找到相关异议</h3>
-                        <p>尝试修改搜索关键词或选择其他分类</p>
+                        <h3>${DATASETS[activeDatasetKey].emptyTitle}</h3>
+                        <p>${DATASETS[activeDatasetKey].emptyDesc}</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = filteredObjections.map((obj, idx) => `
-                <div class="objection-card" data-id="${obj.id}">
-                    <div class="objection-header">
-                        <div class="objection-id">${obj.id}</div>
-                        <div class="objection-title">${obj.title}</div>
-                        <div class="objection-category">${obj.category}</div>
-                    </div>
-
-                    <div class="objection-content">
-                        <div class="content-section">
-                            <div class="content-section-title">❓ 客户异议</div>
-                            <div class="content-section-content">${obj.description}</div>
-                        </div>
-
-                        ${obj.analysis ? `
-                        <div class="content-section">
-                            <div class="content-section-title">💡 问题分析</div>
-                            <div class="content-section-content">${obj.analysis}</div>
-                        </div>
-                        ` : ''}
-
-                        <div class="content-section">
-                            <div class="content-section-title">🎯 回复方案</div>
-                            <ul class="solutions-list">
-                                ${(obj.solutions || []).map(s => `<li>${s}</li>`).join('')}
-                            </ul>
-                        </div>
-
-                        ${obj.dataPoints && obj.dataPoints.length > 0 ? `
-                        <div class="content-section">
-                            <div class="content-section-title">📊 数据支撑</div>
-                            <div class="data-points">
-                                ${obj.dataPoints.map(p => `<div>• ${p}</div>`).join('')}
-                            </div>
-                        </div>
-                        ` : ''}
-
-                        ${obj.counterExamples && obj.counterExamples.length > 0 ? `
-                        <div class="content-section">
-                            <div class="content-section-title">✅ 成功案例</div>
-                            <div class="data-points">
-                                ${obj.counterExamples.map(e => `<div>• ${e}</div>`).join('')}
-                            </div>
-                        </div>
-                        ` : ''}
-
-                        ${obj.tips && obj.tips.length > 0 ? `
-                        <div class="content-section">
-                            <div class="content-section-title">💬 销售技巧</div>
-                            <div class="tips">
-                                ${obj.tips.map(t => `<div>✨ ${t}</div>`).join('')}
-                            </div>
-                        </div>
-                        ` : ''}
-
-                        <button class="copy-btn" onclick="copyToClipboard(${obj.id})">📋 复制话术</button>
-                    </div>
-                </div>
-            `).join('');
-
-            // 添加点击事件
-            document.querySelectorAll('.objection-card').forEach(card => {
-                card.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('copy-btn')) return;
-                    this.classList.toggle('expanded');
-                });
-            });
+            container.innerHTML = filteredItems.map(item => activeDatasetKey === 'objections' ? renderObjectionCard(item) : renderInvitationCard(item)).join('');
         }
 
-        // 复制到剪贴板
-        function copyToClipboard(objId) {
-            const obj = allObjections.find(o => o.id == objId);
-            if (!obj) return;
+        function renderObjectionCard(item) {
+            return `
+                <div class="knowledge-card" data-id="${item.id}">
+                    <div class="knowledge-header">
+                        <div class="knowledge-id">${item.id}</div>
+                        <div class="knowledge-main">
+                            <div class="knowledge-title">${item.title}</div>
+                            <div class="knowledge-tags">
+                                <span class="chip primary">${item.category}</span>
+                                ${(item.keywords || []).filter(Boolean).slice(0, 3).map(keyword => `<span class="chip">${keyword}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
 
-            const text = `【${obj.title}】\n\n问题：${obj.description}\n\n解决方案：\n${obj.solutions.join('\n')}`;
+                    <div class="knowledge-content">
+                        ${renderTextSection('❓ 客户异议', item.description)}
+                        ${renderTextSection('💡 问题分析', item.analysis)}
+                        ${renderListSection('🎯 回复方案', item.solutions)}
+                        ${renderBoxSection('📊 数据支撑', item.dataPoints, '•')}
+                        ${renderBoxSection('✅ 成功案例', item.counterExamples, '•')}
+                        ${renderBoxSection('💬 销售技巧', item.tips, '✨')}
+                        <button class="copy-btn" data-copy-id="${item.id}">📋 复制话术</button>
+                    </div>
+                </div>
+            `;
+        }
 
-            navigator.clipboard.writeText(text).then(() => {
-                event.target.textContent = '✅ 已复制';
-                event.target.classList.add('copied');
+        function renderInvitationCard(item) {
+            return `
+                <div class="knowledge-card" data-id="${item.id}">
+                    <div class="knowledge-header">
+                        <div class="knowledge-id">${item.id}</div>
+                        <div class="knowledge-main">
+                            <div class="knowledge-title">${item.title}</div>
+                            <div class="knowledge-tags">
+                                <span class="chip primary">${item.category}</span>
+                                ${item.stage ? `<span class="chip">${item.stage}</span>` : ''}
+                                ${(item.keywords || []).slice(0, 2).map(keyword => `<span class="chip">${keyword}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="knowledge-content">
+                        ${renderTextSection('🎯 适用对象', item.target)}
+                        ${renderTextSection('🧩 适用场景', item.scene)}
+                        ${renderTextSection('📝 使用说明', item.description)}
+                        ${renderBoxSection('✅ 亮点', item.strengths, '•')}
+                        ${renderBoxSection('⚠️ 需注意的点', item.risks, '•')}
+                        ${renderListSection('📞 首电参考话术', item.talkTrack)}
+                        ${renderListSection('🔁 再次跟进', item.followUp)}
+                        ${renderListSection('💬 微信跟进模板', item.wechatTemplate)}
+                        ${renderListSection('❔ 高频问题应答', item.faq)}
+                        <button class="copy-btn" data-copy-id="${item.id}">📋 复制话术</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTextSection(title, content) {
+            if (!content) return '';
+            return `
+                <div class="content-section">
+                    <div class="content-section-title">${title}</div>
+                    <div class="content-section-content">${content}</div>
+                </div>
+            `;
+        }
+
+        function renderListSection(title, items) {
+            if (!items || !items.length) return '';
+            return `
+                <div class="content-section">
+                    <div class="content-section-title">${title}</div>
+                    <ul class="list-box">
+                        ${items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function renderBoxSection(title, items, marker) {
+            if (!items || !items.length) return '';
+            return `
+                <div class="content-section">
+                    <div class="content-section-title">${title}</div>
+                    <div class="tips-box">
+                        ${items.map(item => `<div>${marker} ${item}</div>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function buildCopyText(item) {
+            if (activeDatasetKey === 'objections') {
+                return `【${item.title}】\n\n问题：${item.description || ''}\n\n分析：${item.analysis || '无'}\n\n回复方案：\n${(item.solutions || []).join('\n')}`;
+            }
+
+            const sections = [
+                `【${item.title}】`,
+                item.target ? `适用对象：${item.target}` : '',
+                item.scene ? `适用场景：${item.scene}` : '',
+                item.description ? `使用说明：${item.description}` : '',
+                item.talkTrack && item.talkTrack.length ? `\n首电话术：\n${item.talkTrack.join('\n')}` : '',
+                item.followUp && item.followUp.length ? `\n再次跟进：\n${item.followUp.join('\n')}` : '',
+                item.wechatTemplate && item.wechatTemplate.length ? `\n微信模板：\n${item.wechatTemplate.join('\n')}` : '',
+                item.faq && item.faq.length ? `\n高频应答：\n${item.faq.join('\n')}` : ''
+            ].filter(Boolean);
+
+            return sections.join('\n\n');
+        }
+
+        function copyToClipboard(itemId, button) {
+            const item = getCurrentItems().find(entry => String(entry.id) === String(itemId));
+            if (!item) return;
+
+            navigator.clipboard.writeText(buildCopyText(item)).then(() => {
+                const original = button.textContent;
+                button.textContent = '✅ 已复制';
+                button.classList.add('copied');
                 setTimeout(() => {
-                    event.target.textContent = '📋 复制话术';
-                    event.target.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
+                    button.textContent = original;
+                    button.classList.remove('copied');
+                }, 1800);
+            }).catch(() => {
                 alert('复制失败，请手动复制');
             });
         }
 
-        // 事件监听
         function attachEventListeners() {
             document.getElementById('searchInput').addEventListener('input', filterAndRender);
 
-            document.querySelectorAll('.category-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                    selectedCategory = this.dataset.category;
-                    filterAndRender();
-                });
+            document.getElementById('moduleSwitch').addEventListener('click', event => {
+                const button = event.target.closest('.module-btn');
+                if (!button) return;
+                document.querySelectorAll('.module-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                activeDatasetKey = button.dataset.module;
+                document.getElementById('searchInput').value = '';
+                renderCurrentDataset();
+            });
+
+            document.getElementById('categories').addEventListener('click', event => {
+                const item = event.target.closest('.category-item');
+                if (!item) return;
+                document.querySelectorAll('.category-item').forEach(node => node.classList.remove('active'));
+                item.classList.add('active');
+                selectedCategory = item.dataset.category;
+                filterAndRender();
+            });
+
+            document.getElementById('knowledgeList').addEventListener('click', event => {
+                const copyButton = event.target.closest('.copy-btn');
+                if (copyButton) {
+                    event.stopPropagation();
+                    copyToClipboard(copyButton.dataset.copyId, copyButton);
+                    return;
+                }
+
+                const card = event.target.closest('.knowledge-card');
+                if (card) {
+                    card.classList.toggle('expanded');
+                }
             });
         }
 
-        // 更新时间
         function updateUpdateTime() {
             const now = new Date();
-            const time = now.toLocaleString('zh-CN');
-            document.getElementById('updateTime').textContent = `更新于 ${time}`;
+            document.getElementById('updateTime').textContent = `更新于 ${now.toLocaleString('zh-CN')}`;
         }
 
-        // 页面加载
+        function getObjectionFallback() {
+            return [
+                {
+                    id: 1,
+                    title: '学习机和电脑有什么区别？',
+                    category: '硬件相关',
+                    keywords: ['学习机', '电脑', '护眼'],
+                    description: '家长担心电脑也能学习，没有必要专门买学习机。',
+                    analysis: '需要把硬件专业性、监管能力和专注学习场景讲清楚。',
+                    solutions: [
+                        '学习机是专门为孩子学习设计的硬件，护眼、监管、反馈都更完整。',
+                        '普通电脑容易被游戏和娱乐分心，学习时长不等于真实有效学习时长。'
+                    ],
+                    dataPoints: ['支持护眼模式与学习管控'],
+                    counterExamples: ['很多家长反馈孩子注意力更集中'],
+                    tips: ['先认同家长想省钱的想法，再讲专业场景差异']
+                }
+            ];
+        }
+
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
